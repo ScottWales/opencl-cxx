@@ -5,6 +5,7 @@
 
 #include <opencl-cxx/platform.hpp>
 #include <opencl-cxx/device.hpp>
+#include <opencl-cxx/error.hpp>
 #include <string>
 #include <sstream>
 
@@ -13,9 +14,9 @@ using namespace OpenCL;
 std::vector<Platform> Platform::All(){
     cl_uint num_platforms;
 
-    clGetPlatformIDs(0,NULL,&num_platforms);
+    CLCheck(clGetPlatformIDs(0,NULL,&num_platforms));
     cl_platform_id * platform_ids = new cl_platform_id[num_platforms];
-    clGetPlatformIDs(num_platforms,platform_ids,NULL);
+    CLCheck(clGetPlatformIDs(num_platforms,platform_ids,NULL));
 
     std::vector<Platform> platforms;
     for (size_t i=0;i<num_platforms;++i){
@@ -33,9 +34,9 @@ Platform Platform::Default(){
 std::vector<Device> Platform::getAllDevices(enum DeviceType::type type){
     cl_uint num_devices;
 
-    clGetDeviceIDs(cl_impl,type,0,NULL,&num_devices);
+    CLCheck(clGetDeviceIDs(cl_impl,type,0,NULL,&num_devices));
     cl_device_id * device_ids = new cl_device_id[num_devices];
-    clGetDeviceIDs(cl_impl,type,num_devices,device_ids,NULL);
+    CLCheck(clGetDeviceIDs(cl_impl,type,num_devices,device_ids,NULL));
 
     std::vector<Device> devices;
     for (size_t i=0;i<num_devices;++i){
@@ -55,8 +56,7 @@ namespace {
         struct Info {
             static T get(cl_platform_id impl, cl_platform_info param){
                 T result;
-                clGetPlatformInfo(impl, param,
-                        sizeof(T),&result,NULL);
+                CLCheck(clGetPlatformInfo(impl, param, sizeof(T),&result,NULL));
                 return result;
             }
         };
@@ -64,12 +64,10 @@ namespace {
         struct Info<std::vector<T> > {
             static std::string get(cl_platform_id impl, cl_platform_info param){
                 size_t size;
-                clGetPlatformInfo(impl, param,
-                        0,NULL,&size);
+                CLCheck(clGetPlatformInfo(impl, param, 0,NULL,&size));
                 size_t length = size/sizeof(T);
                 T * result = new T[length];
-                clGetPlatformInfo(impl, param,
-                        size,result,NULL);
+                CLCheck(clGetPlatformInfo(impl, param, size,result,NULL));
                 std::vector<T> resultvector(result,result+length);
                 delete[] result;
                 return resultvector;
@@ -79,11 +77,9 @@ namespace {
         struct Info<std::string> {
             static std::string get(cl_platform_id impl, cl_platform_info param){
                 size_t size;
-                clGetPlatformInfo(impl, param,
-                        0,NULL,&size);
+                CLCheck(clGetPlatformInfo(impl, param, 0,NULL,&size));
                 char * result = new char[size];
-                clGetPlatformInfo(impl, param,
-                        size,result,NULL);
+                CLCheck(clGetPlatformInfo(impl, param, size,result,NULL));
                 std::string resultstring(result);
                 delete[] result;
                 return resultstring;

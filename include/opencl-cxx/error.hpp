@@ -12,6 +12,16 @@
 namespace OpenCL {
 
 #define CLCheck(x) CLCheckImpl(x,__FILE__,__LINE__,__func__)
+
+    class RuntimeError : 
+        public virtual boost::exception,
+        public virtual std::exception 
+    {
+        public:
+            RuntimeError(int errcode):errcode(errcode){}
+            int errcode;
+    };
+
     inline void CLCheckImpl(int errcode, 
             const char * file,
             long long line,
@@ -25,14 +35,6 @@ namespace OpenCL {
         }
     }
 
-    class RuntimeError : 
-        public virtual boost::exception,
-        public virtual std::exception 
-    {
-        public:
-            RuntimeError(int errcode):errcode(errcode){}
-            int errcode;
-    };
 }
 
 #endif 
