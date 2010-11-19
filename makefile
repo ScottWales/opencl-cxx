@@ -11,7 +11,7 @@ OPENCL_INCDIR=$(OPENCL)/include
 OPENCL_LIBDIR=$(OPENCL)/lib
 OPENCL_LIB=-framework OpenCL
 
-CPPFLAGS+=-MMD -MP -MF $@.dep
+CPPFLAGS+=-MMD -MP -MF build/$*.dep
 CPPFLAGS+=-I./include
 CPPFLAGS+=-I$(BOOST_INCDIR) -I$(OPENCL_INCDIR)
 
@@ -25,3 +25,13 @@ check:
 clean:
 
 .PHONY:all check clean
+
+test/platform:build/platform.o
+
+build/%.o:src/%.cpp
+	mkdir -p $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+test/%:build/test/%.o
+	mkdir -p $(dir $@)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	./$@
