@@ -8,6 +8,7 @@
 
 #include <opencl-cxx/opencl.hpp>
 #include <istream>
+#include <vector>
 
 namespace OpenCL {
     class Context;
@@ -21,13 +22,13 @@ namespace OpenCL {
             Program& operator=(const Program& other);
             ~Program();
 
-            Build();
-            Build(std::vector<Device> devices);
+            void Build();
+            void Build(std::vector<Device> devices);
 
             Context getContext();
             std::vector<Device> getDevices();
 
-            std::vector<std::string> Source();
+            std::string Source();
             std::vector<std::vector<unsigned char> > Binaries();
 
             std::string BuildLog();

@@ -22,7 +22,7 @@ LDFLAGS+=-L$(OPENCL_LIBDIR)
 LDLIBS+=$(OPENCL_LIB)
 
 all:check
-check:test/platform test/device test/context
+check:test/platform test/device test/context test/program
 clean:
 
 .PHONY:all check clean

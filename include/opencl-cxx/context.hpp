@@ -28,6 +28,7 @@ namespace OpenCL {
             Device getDefaultDevice();
 
         protected:
+            friend class Program;
             Context(cl_context impl):cl_impl(impl){}
             cl_context cl_impl;
     };

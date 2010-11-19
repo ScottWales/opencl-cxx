@@ -76,6 +76,7 @@ namespace OpenCL {
         private:
             friend class Platform;
             friend class Context;
+            friend class Program;
             Device(cl_device_id cl_impl):cl_impl(cl_impl){}
             Device(); // Not implemented
 

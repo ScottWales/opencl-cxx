@@ -4,6 +4,9 @@
 // http://www.boost.org/LICENCE_1_0.txt)
 
 #include <opencl-cxx/program.hpp>
+#include <opencl-cxx/context.hpp>
+#include <sstream>
+#include <iostream>
 
 using namespace OpenCL;
 
@@ -14,6 +17,7 @@ int main(){
     std::stringstream stream(source);
 
     Program program(context,stream);
+    std::cout<<program.Source()<<"\n";
     program.Build();
 
     return 0;

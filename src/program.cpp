@@ -4,6 +4,9 @@
 // http://www.boost.org/LICENCE_1_0.txt)
 
 #include <opencl-cxx/program.hpp>
+#include <opencl-cxx/context.hpp>
+#include <opencl-cxx/device.hpp>
+#include <opencl-cxx/error.hpp>
 
 using namespace OpenCL;
 
@@ -28,43 +31,92 @@ Program::Program(Context context, std::istream& stream){
             &source_ptr,
             NULL,
             &errcode);
+    CLCheck(errcode);
 }
 
 Program::Program(const Program& other){
-    clRetainProgram(other.cl_impl);
+    CLCheck(clRetainProgram(other.cl_impl));
     cl_impl = other.cl_impl;
 }
 Program& Program::operator=(const Program& other){
-    clRetainProgram(other.cl_impl);
-    cl_context copy = other.cl_impl;
+    CLCheck(clRetainProgram(other.cl_impl));
+    cl_program copy = other.cl_impl;
     cl_impl = other.cl_impl;
-    clReleaseProgram(copy);
+    CLCheck(clReleaseProgram(copy));
     return *this;
 }
 Program::~Program(){
-    clReleaseProgram(cl_impl);
+    CLCheck(clReleaseProgram(cl_impl));
 }
 
 void Program::Build() {
     Build(getContext().getAllDevices());
 }
 void Program::Build(std::vector<Device> devices){
-    cl_device_id * device_ids = new cl_device_id[devices.size()];
+    std::vector<cl_device_id> device_ids;
     for (size_t i=0;i<devices.size();++i){
-        device_ids[i] = devices[i].cl_impl;
+        device_ids.push_back(devices[i].cl_impl);
     }
-    clBuildProgram(cl_impl,
-            devices.size(),
-            device_ids,
-            NULL,NULL,NULL);
+    CLCheck(clBuildProgram(cl_impl, devices.size(), &device_ids[0], NULL,NULL,NULL));
 }
 
-Context Program::getContext();
-std::vector<Device> Program::getDevices();
+namespace {
+    template <typename T>
+        struct Info {
+            static T get(cl_program cl_impl, cl_program_info param){
+                T result;
+                CLCheck(clGetProgramInfo(cl_impl, param, sizeof(T),&result,NULL));
+                return result;
+            }
+        };
+    template <typename T>
+        struct Info<std::vector<T> > {
+            static std::vector<T> get(cl_program cl_impl, cl_program_info param){
+                size_t size;
+                CLCheck(clGetProgramInfo(cl_impl, param, 0,NULL,&size));
+                size_t length = size/sizeof(T);
+                T * result = new T[length];
+                CLCheck(clGetProgramInfo(cl_impl, param, size,result,NULL));
+                std::vector<T> resultvector(result,result+length);
+                delete[] result;
+                return resultvector;
+            }
+        };
+    template <>
+        struct Info<std::string> {
+            static std::string get(cl_program cl_impl, cl_program_info param){
+                size_t size;
+                CLCheck(clGetProgramInfo(cl_impl, param, 0,NULL,&size));
+                char * result = new char[size];
+                CLCheck(clGetProgramInfo(cl_impl, param, size,result,NULL));
+                std::string resultstring(result);
+                delete[] result;
+                return resultstring;
+            }
+        };
+}
 
-std::vector<std::string> Program::Source();
-std::vector<std::vector<unsigned char> > Program::Binaries();
+Context Program::getContext(){
+    return Context(Info<cl_context>::get(cl_impl,CL_PROGRAM_CONTEXT));
+}
 
-std::string Program::BuildLog();
-std::string Program::BuildOptions();
-cl_build_status Program::BuildStatus();
+std::vector<Device> Program::getDevices(){
+    std::vector<cl_device_id> device_ids = 
+        Info<std::vector<cl_device_id> >::get(cl_impl,CL_PROGRAM_DEVICES);
+    std::vector<Device> devices;
+    for (size_t i=0;i<device_ids.size();++i){
+        devices.push_back(device_ids[i]);
+    }
+    return devices;
+}
+
+std::string Program::Source(){
+    return Info<std::string>::get(cl_impl,CL_PROGRAM_SOURCE);
+}
+/*
+   std::vector<std::vector<unsigned char> > Program::Binaries();
+
+   std::string Program::BuildLog();
+   std::string Program::BuildOptions();
+   cl_build_status Program::BuildStatus();
+   */
