@@ -40,7 +40,7 @@ Program::Program(const Program& other){
 }
 Program& Program::operator=(const Program& other){
     CLCheck(clRetainProgram(other.cl_impl));
-    cl_program copy = other.cl_impl;
+    cl_program copy = cl_impl;
     cl_impl = other.cl_impl;
     CLCheck(clReleaseProgram(copy));
     return *this;
@@ -57,7 +57,7 @@ void Program::Build(std::vector<Device> devices){
     for (size_t i=0;i<devices.size();++i){
         device_ids.push_back(devices[i].cl_impl);
     }
-    CLCheck(clBuildProgram(cl_impl, devices.size(), &device_ids[0], NULL,NULL,NULL));
+    CLCheck(clBuildProgram(cl_impl, devices.size(), &device_ids[0], "",NULL,NULL));
 }
 
 namespace {
@@ -97,7 +97,7 @@ namespace {
 }
 
 Context Program::getContext(){
-    return Context(Info<cl_context>::get(cl_impl,CL_PROGRAM_CONTEXT));
+    return Context(Info<cl_context>::get(cl_impl,CL_PROGRAM_CONTEXT)).Retain();
 }
 
 std::vector<Device> Program::getDevices(){
