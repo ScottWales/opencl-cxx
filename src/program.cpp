@@ -94,6 +94,39 @@ namespace {
                 return resultstring;
             }
         };
+    template <typename T>
+        struct BuildInfo {
+            static T get(cl_program cl_impl, cl_device_id device, cl_program_info param){
+                T result;
+                CLCheck(clGetProgramBuildInfo(cl_impl, device, param, sizeof(T),&result,NULL));
+                return result;
+            }
+        };
+    template <typename T>
+        struct BuildInfo<std::vector<T> > {
+            static std::vector<T> get(cl_program cl_impl, cl_device_id device, cl_program_info param){
+                size_t size;
+                CLCheck(clGetProgramBuildInfo(cl_impl, device, param, 0,NULL,&size));
+                size_t length = size/sizeof(T);
+                T * result = new T[length];
+                CLCheck(clGetProgramBuildInfo(cl_impl, device, param, size,result,NULL));
+                std::vector<T> resultvector(result,result+length);
+                delete[] result;
+                return resultvector;
+            }
+        };
+    template <>
+        struct BuildInfo<std::string> {
+            static std::string get(cl_program cl_impl, cl_device_id device, cl_program_info param){
+                size_t size;
+                CLCheck(clGetProgramBuildInfo(cl_impl, device, param, 0,NULL,&size));
+                char * result = new char[size];
+                CLCheck(clGetProgramBuildInfo(cl_impl, device, param, size,result,NULL));
+                std::string resultstring(result);
+                delete[] result;
+                return resultstring;
+            }
+        };
 }
 
 Context Program::getContext(){
@@ -115,8 +148,14 @@ std::string Program::Source(){
 }
 /*
    std::vector<std::vector<unsigned char> > Program::Binaries();
-
-   std::string Program::BuildLog();
-   std::string Program::BuildOptions();
-   cl_build_status Program::BuildStatus();
    */
+
+std::string Program::BuildLog(Device device) {
+    return BuildInfo<std::string>::get(cl_impl,device.cl_impl,CL_PROGRAM_BUILD_LOG);
+}
+std::string Program::BuildOptions(Device device){
+    return BuildInfo<std::string>::get(cl_impl,device.cl_impl,CL_PROGRAM_BUILD_OPTIONS);
+}
+cl_build_status Program::BuildStatus(Device device){
+    return BuildInfo<cl_build_status>::get(cl_impl,device.cl_impl,CL_PROGRAM_BUILD_STATUS);
+}

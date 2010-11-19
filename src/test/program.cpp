@@ -25,7 +25,10 @@ int main(){
 
         Program program(context,stream);
         std::cout<<program.Source()<<"\n";
-       program.Build();
+        program.Build();
+        for (size_t i=0;i<devices.size();++i){
+            std::cout<<program.BuildLog(devices[i])<<"\n";
+        }
 
     } catch (boost::exception& e) {
         std::cerr<<diagnostic_information(e);

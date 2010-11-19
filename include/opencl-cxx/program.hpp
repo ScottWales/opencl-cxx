@@ -31,9 +31,9 @@ namespace OpenCL {
             std::string Source();
             std::vector<std::vector<unsigned char> > Binaries();
 
-            std::string BuildLog();
-            std::string BuildOptions();
-            cl_build_status BuildStatus();
+            std::string BuildLog(Device device);
+            std::string BuildOptions(Device device);
+            cl_build_status BuildStatus(Device device);
 
         private:
             Program(); // Not implemented
