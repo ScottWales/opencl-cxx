@@ -22,6 +22,7 @@ namespace OpenCL {
                     = DeviceType::Default);
         private:
             friend class Platform;
+            friend class Context;
             Device(cl_device_id cl_impl):cl_impl(cl_impl){}
             Device(); // Not implemented
 

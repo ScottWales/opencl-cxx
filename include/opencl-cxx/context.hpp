@@ -21,7 +21,7 @@ namespace OpenCL {
             Context(std::vector<Device> devices);
 
             Context(const Context& other);
-            Context operator=(const Context& other);
+            Context& operator=(const Context& other);
             ~Context();
 
             std::vector<Device> getAllDevices(enum DeviceType::type type
@@ -31,6 +31,7 @@ namespace OpenCL {
 
 
         protected:
+            Context(cl_context impl):cl_impl(impl){}
             cl_context cl_impl;
     };
 }

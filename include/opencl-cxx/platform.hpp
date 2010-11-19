@@ -27,6 +27,7 @@ namespace OpenCL {
             Device getDefaultDevice(enum DeviceType::type type
                     = DeviceType::Default);
         private:
+            friend class Context;
             Platform(cl_platform_id cl_impl):cl_impl(cl_impl){}
             Platform(); // Not implemented
 
