@@ -23,8 +23,7 @@ namespace {
         struct Info {
             static T get(cl_device_id cl_impl, cl_device_info param){
                 T result;
-                clGetDeviceInfo(cl_impl, param,
-                        sizeof(T),&result,NULL);
+                CLCheck(clGetDeviceInfo(cl_impl, param, sizeof(T),&result,NULL));
                 return result;
             }
         };
@@ -32,12 +31,10 @@ namespace {
         struct Info<std::vector<T> > {
             static std::vector<T> get(cl_device_id cl_impl, cl_device_info param){
                 size_t size;
-                clGetDeviceInfo(cl_impl, param,
-                        0,NULL,&size);
+                CLCheck(clGetDeviceInfo(cl_impl, param, 0,NULL,&size));
                 size_t length = size/sizeof(T);
                 T * result = new T[length];
-                clGetDeviceInfo(cl_impl, param,
-                        size,result,NULL);
+                CLCheck(clGetDeviceInfo(cl_impl, param, size,result,NULL));
                 std::vector<T> resultvector(result,result+length);
                 delete[] result;
                 return resultvector;
@@ -47,11 +44,9 @@ namespace {
         struct Info<std::string> {
             static std::string get(cl_device_id cl_impl, cl_device_info param){
                 size_t size;
-                clGetDeviceInfo(cl_impl, param,
-                        0,NULL,&size);
+                CLCheck(clGetDeviceInfo(cl_impl, param, 0,NULL,&size));
                 char * result = new char[size];
-                clGetDeviceInfo(cl_impl, param,
-                        size,result,NULL);
+                CLCheck(clGetDeviceInfo(cl_impl, param, size,result,NULL));
                 std::string resultstring(result);
                 delete[] result;
                 return resultstring;
