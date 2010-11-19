@@ -35,6 +35,7 @@ namespace OpenCL {
 
         private:
             friend class Context;
+            friend class Device;
             Platform(cl_platform_id cl_impl):cl_impl(cl_impl){}
             Platform(); // Not implemented
 

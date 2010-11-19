@@ -11,13 +11,16 @@
 namespace OpenCL {
     /// Enumeration of the types of devices
     struct DeviceType {
-        enum type {
-            All = CL_DEVICE_TYPE_ALL,
-            Default = CL_DEVICE_TYPE_DEFAULT,
-            CPU = CL_DEVICE_TYPE_CPU,
-            GPU = CL_DEVICE_TYPE_GPU,
-            Accelerator = CL_DEVICE_TYPE_ACCELERATOR,
-        };
+        public:
+            enum type {
+                All = CL_DEVICE_TYPE_ALL,
+                Default = CL_DEVICE_TYPE_DEFAULT,
+                CPU = CL_DEVICE_TYPE_CPU,
+                GPU = CL_DEVICE_TYPE_GPU,
+                Accelerator = CL_DEVICE_TYPE_ACCELERATOR,
+            };
+            DeviceType(enum type value):value(value){}
+            enum type value;
     };
 }
 
