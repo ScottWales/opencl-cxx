@@ -24,6 +24,8 @@ namespace OpenCL {
                 }
         private:
             Kernel(); // Not implemented
+            Kernel(cl_kernel impl):cl_impl(impl){}
+
             template <typename T, typename... Args>
                 Kernel& RecursiveSetArg(unsigned int index,
                         T arg1, Arg... rest);
