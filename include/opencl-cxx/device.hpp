@@ -21,6 +21,7 @@ namespace OpenCL {
             static Device Default(enum DeviceType::type type
                     = DeviceType::Default);
         private:
+            friend class Platform;
             Device(cl_device_id cl_impl):cl_impl(cl_impl){}
             Device(); // Not implemented
 

@@ -14,14 +14,15 @@ OPENCL_LIB=-framework OpenCL
 CPPFLAGS+=-MMD -MP -MF build/$*.dep
 CPPFLAGS+=-I./include
 CPPFLAGS+=-I$(BOOST_INCDIR) -I$(OPENCL_INCDIR)
+CPPFLAGS+=-Wall -Werror -Wextra
 
 CXXFLAGS+=-O2 -g
 
 LDFLAGS+=-L$(OPENCL_LIBDIR)
 LDLIBS+=$(OPENCL_LIB)
 
-all:
-check:
+all:check
+check:test/platform
 clean:
 
 .PHONY:all check clean
