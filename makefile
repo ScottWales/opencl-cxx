@@ -39,3 +39,4 @@ test/%:build/test/%.o
 	mkdir -p $(dir $@)
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 	./$@
+-include $(wildcard build/*.dep) $(wildcard build/test/*.dep)
