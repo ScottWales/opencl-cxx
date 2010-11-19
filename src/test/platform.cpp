@@ -5,6 +5,7 @@
 
 #include <opencl-cxx/platform.hpp>
 #include <opencl-cxx/device.hpp>
+#include <iostream>
 
 int main(){
     // Construction
@@ -17,6 +18,15 @@ int main(){
 
     // Device access
     for (size_t i=0;i<platforms.size();++i){
+        std::cout<<platforms[i].Name()<<"\t"
+            <<platforms[i].Vendor()<<"\t"
+            <<platforms[i].Version()<<"\t"
+            <<platforms[i].Profile()<<"\n";
+        std::vector<std::string> extensions = platforms[i].Extensions();
+        for (size_t j=0;j<extensions.size();++j){
+            std::cout<<"\t"<<extensions[j]<<"\n";
+        }
+
         std::vector<OpenCL::Device> devices = platforms[i].getAllDevices();
     }
 
