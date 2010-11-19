@@ -5,6 +5,7 @@
 
 #include <opencl-cxx/device.hpp>
 #include <opencl-cxx/platform.hpp>
+#include <opencl-cxx/error.hpp>
 #include <string>
 #include <sstream>
 
