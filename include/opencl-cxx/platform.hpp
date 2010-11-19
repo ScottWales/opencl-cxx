@@ -26,6 +26,13 @@ namespace OpenCL {
             /// Get the default device on the platform
             Device getDefaultDevice(enum DeviceType::type type
                     = DeviceType::Default);
+
+            std::string Profile();
+            std::string Version();
+            std::string Name();
+            std::string Vendor();
+            std::vector<std::string> Extensions();
+
         private:
             friend class Context;
             Platform(cl_platform_id cl_impl):cl_impl(cl_impl){}
