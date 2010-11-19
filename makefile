@@ -30,6 +30,7 @@ clean:
 test/platform:build/platform.o
 test/device:build/device.o build/platform.o
 test/context:build/context.o build/device.o build/platform.o
+test/program:build/program.o build/context.o build/device.o build/platform.o
 
 build/%.o:src/%.cpp
 	mkdir -p $(dir $@)
