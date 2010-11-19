@@ -7,20 +7,22 @@
 // http://www.boost.org/LICENCE_1_0.txt)
 
 #include <opencl-cxx/opencl.hpp>
-#include <opencl-cxx/refcounted.hpp>
 #include <opencl-cxx/devicetype.hpp>
+#include <vector>
 
 namespace OpenCL {
     class Platform;
     class Device;
 
-    class Context: public RefCounted<cl_context> {
+    class Context {
         public:
-            Context();
-            Context(Platform platform);
+            Context(enum DeviceType::type type = 
+                    DeviceType::Default);
             Context(std::vector<Device> devices);
-            Context(std::vector<Device> devices,
-                    Platform platform);
+
+            Context(const Context& other);
+            Context operator=(const Context& other);
+            ~Context();
 
             std::vector<Device> getAllDevices(enum DeviceType::type type
                     = DeviceType::All);
@@ -29,9 +31,8 @@ namespace OpenCL {
 
 
         protected:
-            virtual void Retain(cl_context impl);
-            virtual void Release(cl_context impl);
-    }
+            cl_context cl_impl;
+    };
 }
 
 #endif 

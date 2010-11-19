@@ -22,13 +22,14 @@ LDFLAGS+=-L$(OPENCL_LIBDIR)
 LDLIBS+=$(OPENCL_LIB)
 
 all:check
-check:test/platform test/device
+check:test/platform test/device test/context
 clean:
 
 .PHONY:all check clean
 
 test/platform:build/platform.o
 test/device:build/device.o build/platform.o
+test/context:build/context.o build/device.o build/platform.o
 
 build/%.o:src/%.cpp
 	mkdir -p $(dir $@)

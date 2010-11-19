@@ -10,6 +10,7 @@
 using namespace OpenCL;
 
 std::vector<Device> Context::getAllDevices(enum DeviceType::type type){
+    (void)type;
     std::vector<Device> devices;
     return devices;
 }
