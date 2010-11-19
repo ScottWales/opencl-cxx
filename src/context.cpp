@@ -50,7 +50,7 @@ Context::Context(const Context& other){
 }
 Context& Context::operator=(const Context& other){
     CLCheck(clRetainContext(other.cl_impl));
-    cl_context copy = other.cl_impl;
+    cl_context copy = cl_impl;
     cl_impl = other.cl_impl;
     CLCheck(clReleaseContext(copy));
     return *this;
@@ -107,4 +107,11 @@ std::vector<Device> Context::getAllDevices(){
 
 Device Context::getDefaultDevice(){
     return getAllDevices().at(0);
+}
+unsigned int Context::ReferenceCount() const{
+    return Info<cl_uint>::get(cl_impl,CL_CONTEXT_REFERENCE_COUNT);
+}
+Context& Context::Retain(){
+    CLCheck(clRetainContext(cl_impl));
+    return *this;
 }

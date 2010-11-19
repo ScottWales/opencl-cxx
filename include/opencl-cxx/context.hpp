@@ -27,10 +27,12 @@ namespace OpenCL {
             std::vector<Device> getAllDevices();
             Device getDefaultDevice();
 
-        protected:
+        private:
             friend class Program;
             Context(cl_context impl):cl_impl(impl){}
             cl_context cl_impl;
+            unsigned int ReferenceCount() const;
+            Context& Retain();
     };
 }
 
