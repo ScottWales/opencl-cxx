@@ -6,6 +6,7 @@
 #include <opencl-cxx/context.hpp>
 #include <opencl-cxx/platform.hpp>
 #include <opencl-cxx/device.hpp>
+#include <opencl-cxx/error.hpp>
 
 using namespace OpenCL;
 
@@ -20,6 +21,7 @@ Context::Context(enum DeviceType::type type){
             clLogMessagesToStderrAPPLE,
             NULL,
             &errcode);
+    CLCheck(errcode);
 }
 
 Context::Context(std::vector<Device> devices){
@@ -39,21 +41,22 @@ Context::Context(std::vector<Device> devices){
             NULL,
             &errcode);
     delete[] device_ids;
+    CLCheck(errcode);
 }
 
 Context::Context(const Context& other){
-    clRetainContext(other.cl_impl);
+    CLCheck(clRetainContext(other.cl_impl));
     cl_impl = other.cl_impl;
 }
 Context& Context::operator=(const Context& other){
-    clRetainContext(other.cl_impl);
+    CLCheck(clRetainContext(other.cl_impl));
     cl_context copy = other.cl_impl;
     cl_impl = other.cl_impl;
-    clReleaseContext(copy);
+    CLCheck(clReleaseContext(copy));
     return *this;
 }
 Context::~Context(){
-    clReleaseContext(cl_impl);
+    CLCheck(clReleaseContext(cl_impl));
 }
 
 std::vector<Device> Context::getAllDevices(enum DeviceType::type type){
