@@ -31,7 +31,7 @@ namespace OpenCL {
             Platform(); // Not implemented
 
             cl_platform_id cl_impl;
-    }
+    };
 }
 
 

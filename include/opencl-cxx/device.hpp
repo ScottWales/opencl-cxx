@@ -25,7 +25,7 @@ namespace OpenCL {
             Device(); // Not implemented
 
             cl_device_id cl_impl;
-    }
+    };
 }
 
 #endif 
