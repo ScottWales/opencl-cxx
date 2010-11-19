@@ -25,7 +25,7 @@ std::vector<Platform> Platform::All(){
 }
 
 Platform Platform::Default(){
-    return All()[0];
+    return All().at(0);
 }
 
 std::vector<Device> Platform::getAllDevices(enum DeviceType::type type){
@@ -45,5 +45,5 @@ std::vector<Device> Platform::getAllDevices(enum DeviceType::type type){
 }
 
 Device Platform::getDefaultDevice(enum DeviceType::type type){
-    return getAllDevices(type)[0];
+    return getAllDevices(type).at(0);
 }
