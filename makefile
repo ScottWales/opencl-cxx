@@ -3,6 +3,8 @@
 # (See accompanying file LICENCE_1_0.txt or copy at
 # http://www.boost.org/LICENCE_1_0.txt)
 
+CXX=g++-4.5
+
 BOOST=/usr/local/boost
 BOOST_INCDIR=$(BOOST)/include
 
@@ -17,13 +19,15 @@ CPPFLAGS+=-I$(BOOST_INCDIR) -I$(OPENCL_INCDIR)
 CPPFLAGS+=-Wall -Werror -Wextra
 
 CXXFLAGS+=-O2 -g
+CXXFLAGS+=-std=c++0x
 
 LDFLAGS+=-L$(OPENCL_LIBDIR)
 LDLIBS+=$(OPENCL_LIB)
 
 all:check
-check:test/platform test/device test/context test/program
+check:test/platform test/device test/context test/program test/kernel
 clean:
+	$(RM) -r build test
 
 .PHONY:all check clean
 
@@ -31,6 +35,7 @@ test/platform:build/platform.o
 test/device:build/device.o build/platform.o
 test/context:build/context.o build/device.o build/platform.o
 test/program:build/program.o build/context.o build/device.o build/platform.o
+test/kernel:build/kernel.o build/program.o build/context.o build/device.o build/platform.o
 
 build/%.o:src/%.cpp
 	mkdir -p $(dir $@)
