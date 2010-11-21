@@ -36,6 +36,7 @@ namespace OpenCL {
             cl_build_status BuildStatus(Device device);
 
         private:
+            friend class Kernel;
             Program(); // Not implemented
             Program(cl_program impl):cl_impl(impl){}
 

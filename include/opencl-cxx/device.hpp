@@ -9,6 +9,7 @@
 #include <opencl-cxx/opencl.hpp>
 #include <opencl-cxx/devicetype.hpp>
 #include <vector>
+#include <string>
 
 namespace OpenCL {
     class Platform;
