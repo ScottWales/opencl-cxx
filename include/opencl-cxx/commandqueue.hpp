@@ -31,6 +31,7 @@ namespace OpenCL {
             template <typename T, typename Args...>
                 std::vector<Event> Add(T action1, Args... rest);
 
+            /// Add a list of actions to be evaluated in sequence
             template <typename Args...>
                 std::vector<Event> operator()(Args... args){
                     return Add(args...);
@@ -39,7 +40,7 @@ namespace OpenCL {
             CommandQueue(); // Not implemented
             CommandQueue(cl_commandqueue impl):cl_impl(impl){};
 
-            cl_commandqueue impl;
+            cl_command_queue cl_impl;
     };
 }
 
